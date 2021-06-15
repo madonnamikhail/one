@@ -13,73 +13,116 @@
 </head>
 
 <body>
-    <div class="container mx-auto">
+    <div class="container">
         <div class="row">
-            <div class="col-12">
-                <h1 style="text-align: center;">You can Insert new provider</h1>
-            </div>
-            <div class="col-6 offset-2">
-                @if (Session()->has('Success'))
-                    <div class="alert alert-success">{{ Session()->get('Success') }}</div>
-                    @php
-                        Session()->forget('Success');
-                    @endphp
-                @endif
-                @if (Session()->has('Error'))
-                    <div class="alert alert-danger">{{ Session()->get('Error') }}</div>
-                    @php
-                        Session()->forget('Error');
-                    @endphp
-                @endif
-                <form method="post" action="{{ route('create.user') }}">
-                    @csrf
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">{{ __('Name') }}</label>
-                            <input type="name" name="name" class="form-control" value="{{ old('name') }}"
-                                id="exampleInputEmail1" placeholder="Enter name">
-                        </div>
-                        @error('name')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
+            <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm" style="width:100%;">
+                <div class="container">
+                    {{--  <a class="navbar-brand" href="{{ url('/') }}">
+                        {{ config('app.name', 'Laravel') }}
+                    </a>  --}}
 
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">{{ __('Username') }}</label>
-                            <input type="username" name="username" value="{{ old('username') }}" class="form-control"
-                                id="exampleInputEmail1" placeholder="Enter username">
-                        </div>
-                        @error('username')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">{{ __('Email') }}</label>
-                            <input type="email" name="email" value="{{ old('email') }}" class="form-control"
-                                id="exampleInputEmail1" placeholder="Enter Email">
-                        </div>
-                        @error('email')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">{{ __('Password') }}</label>
-                            <input type="password" name="password" value="{{ old('password') }}" class="form-control"
-                                id="exampleInputEmail1" placeholder="Enter Password">
-                        </div>
-                        @error('password')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                       One App
+                    </a>
+                    <a class="navbar-brand" style="text-decoration-line: underline;" href="{{ route('all.users') }}">
+                        all users
+                     </a>
+                     <a class="navbar-brand" style="text-decoration-line: underline;" href="{{ route('add.user') }}">
+                        add new user(provider)                   
+                      </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+    
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="navbar-nav mr-auto">
+    
+                        </ul>
+    
+                        <!-- Right Side Of Navbar -->
+                        <ul class="navbar-nav ml-auto">
+                            <!-- Authentication Links -->
+                            {{--  @guest
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                </li>
+                                @if (Route::has('register'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    </li>
+                                @endif
+                            @else
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        {{ Auth::user()->name }}
+                                    </a>
+    
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                                            {{ __('Logout') }}
+                                        </a>
+    
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                </li>
+                            @endguest  --}}
+                            @guest
+                            <li class="top-hover">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    Account
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <ul class="submenu">
+                                        <li class="top-hover">
+                                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                        </li>
+                                        @if (Route::has('register'))
+                                            <li class="top-hover">
+                                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                            </li>
+                                        @endif
+                                    </ul>
+                              </div>
+                        </li>
+                      @else
+                        <li class="top-hover">
+                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ Auth::user()->name }}
+                                {{-- {{ Auth::guard('admin')->user }} --}}
+                            </a>
+                      
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <ul class="submenu">
+                                    <li class="top-hover">
+                                        <a class="dropdown-item" href="{{ route('admin.logout') }}"
+                                        onclick="event.preventDefault();
+                                                      document.getElementById('logout-form').submit();">
+                                         {{ __('Logout') }}
+                                     </a>
+                                    </li>
+                                </ul>
+                                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
+                        @endguest
+                        </ul>
                     </div>
-                    <!-- /.card-body -->
-                    <div class="card-footer">
-                        <button type="submit"
-                            class="btn btn-primary">{{ 'Submit' }}</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+            </nav>
+         
+
         </div>
     </div>
+  <div>
+      <h1 style="text-align: center ;margin:200px 0px;">YOU ARE iN ADMIN DASHBOARD</h1>
+  </div>
 
 
     <!-- Optional JavaScript -->

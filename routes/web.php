@@ -30,13 +30,19 @@ Route::group(['prefix' => 'admin' , 'namespace'=> 'admin'], function () {
 Route::group(['prefix' => 'admin' , 'namespace'=> 'user'], function () {
     Route::get('create','UserController@create')->name('add.user');
     Route::post('store','UserController@store')->name('create.user');
+    Route::get('all-users','UserController@allUsers')->name('all.users');
 });
 
 Route::group(['prefix' => 'user' , 'namespace'=> 'user'], function () {
     Route::get('/','UserController@index')->name('user.index');
     // Route::domain('{subdomain}.'.config('app.short_url'))->group(function(){
         Route::get('/user_location','UserController@showLocation')->name('show.location');
+        
     // });
+});
+
+Route::domain('{subdomain}.'.config('app.short_url'))->group(function () {
+    Route::get('/user_location', 'UserController@index')->name('products.index');
 });
 
 
